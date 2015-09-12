@@ -68,8 +68,20 @@ describe("maybe", function () {
   })
 
   it("should allow errors thrown in the callback to be uncaught", function (done) {
-    var mochaHandler = process.listeners("uncaughtException").pop()
-    process.removeListener("uncaughtException", mochaHandler)
+    var mochaHandler
+
+    // Temporarily remove Mocha's global error handling so we can
+    // verify error is indeed uncaught by installing our own
+    // global error handler.
+    if (process.browser) {
+      mochaHandler = global.onerror
+      global.onerror = handleUncaughtException
+    }
+    else {
+      mochaHandler = process.listeners("uncaughtException").pop()
+      process.removeListener("uncaughtException", mochaHandler)
+      process.once("uncaughtException", handleUncaughtException)
+    }
 
     var f = function f (cb) {
       return maybe(cb, new Promise(function (resolve, reject) {
@@ -83,11 +95,26 @@ describe("maybe", function () {
       throw new Error("yep")
     })
 
-    process.once("uncaughtException", function handleUncaughtException (err) {
-      assert.strictEqual(err.message, "yep")
-      process.on("uncaughtException", mochaHandler)
-      return done()
-    })
+    function handleUncaughtException (err) {
+      // `err` is either an Error when running under Node, or a
+      // string if running under a browser.
+      var msg = err.message || err
+      
+      assert(msg.match(/\byep\b/), "got expected error")
+
+      // Restore Mocha's global error handler.
+      if (process.browser) {
+        global.onerror = mochaHandler
+      }
+      else {
+        process.on("uncaughtException", mochaHandler)
+      }
+
+      done()
+
+      // Don't leak error to browser console
+      return true
+    }
   })
 
   it("should not let the callback be called more than once", function (done) {
