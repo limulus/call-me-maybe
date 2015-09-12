@@ -1,4 +1,4 @@
-# call-me-maybe
+# call-me-maybe [![Build Status](https://travis-ci.org/limulus/call-me-maybe.svg?branch=master)](https://travis-ci.org/limulus/call-me-maybe)
 
 Let your JS API users either give you a callback or receive a promise.
 
