@@ -9,8 +9,7 @@ module.exports = function maybe (cb, promise) {
     promise
       .then(function (result) {
         next(function () { cb(null, result) })
-      })
-      .catch(function (err) {
+      }, function (err) {
         next(function () { cb(err) })
       })
     return undefined
