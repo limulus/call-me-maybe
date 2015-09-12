@@ -99,7 +99,7 @@ describe("maybe", function () {
       // `err` is either an Error when running under Node, or a
       // string if running under a browser.
       var msg = err.message || err
-      
+
       assert(msg.match(/\byep\b/), "got expected error")
 
       // Restore Mocha's global error handler.
@@ -130,12 +130,8 @@ describe("maybe", function () {
     f(function (err, result) {
       called++
       assert(called <= 1, "called only once")
+      setTimeout(function () { done() }, 100)
       return Promise.reject(new Error("bah"))
     })
-
-    setTimeout(function () {
-      assert.strictEqual(called, 1, "callback was called once")
-      done()
-    }, 15)
   })
 })
