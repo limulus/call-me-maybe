@@ -2,6 +2,7 @@
 
 var maybe = require("../")
 var assert = require("assert")
+var Promise = global.Promise || require("promise")
 
 describe("maybe", function () {
   it("should call the callback with result the promise is resolved to", function (done) {
