@@ -23,4 +23,4 @@ If the callback `cb` is truthy, returns `undefined` and will call `cb` when `pro
   - If `promise` is fulfilled, then it is called with the result of the promise: `cb(null, result)`
   - If `promise` is rejected, then it is called with the rejection error: `cb(err)`
 
-If `cb` is falsey, then `promise` is retuned.
+If `cb` is falsey, then `promise` is returned.
