@@ -4,9 +4,9 @@ type PromiseValue<T extends Promise<any>> = T extends Promise<infer R>
   ? R
   : never
 
-declare function maybe<P extends Promise<any>, C extends Callback<T> | Falsy>(
-  cb: Callback<PromiseValue<P>> | Falsy,
-  result: P
-): C extends Callback<PromiseValue<P>> ? void : P
+declare function maybe<
+  P extends Promise<any>,
+  C extends Callback<PromiseValue<P>> | Falsy
+>(cb: C, result: P): C extends Callback<PromiseValue<P>> ? void : P
 
 export = maybe
