@@ -8,12 +8,12 @@ module.exports = function maybe (cb, promise) {
   if (cb) {
     promise
       .then(function (result) {
-        next(() => {
+        next(function () {
           cb && cb(null, result)
           cb = undefined
         })
       }, function (err) {
-        next(() => {
+        next(function () {
           cb && cb(err)
           cb = undefined
         })

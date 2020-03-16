@@ -122,47 +122,51 @@ describe("maybe", function () {
     /**
      * A __very__ broken Promise implementation
      */
-    class Promizy {
+    var Promizy = function (executor) {
 
-      constructor (executor) {
+      this._nexts = []
 
-        this._nexts = []
+      this.then = function (resolver, rejecter) {
+        this._nexts.push({
+          resolver: resolver,
+          rejecter: rejecter,
+        })
+      }
 
-        const create = (type) => {
-          return (value) => {
-            for (const next of this._nexts) {
-              const fn = next[type]
-              if (typeof fn === 'function') {
-                fn(value)
-              }
+      this.catch = function (rejecter) {
+        this._nexts.push({
+          rejecter: rejecter,
+        })
+      }
+
+      var self = this
+
+      var create = function (type) {
+        return function (value) {
+          self._nexts.forEach(function (next) {
+            var fn = next[type]
+            if (typeof fn === 'function') {
+              fn(value)
             }
-          }
+          })
         }
-
-        executor(
-          create('resolver'),
-          create('rejecter')
-        )
       }
 
-      then (resolver, rejecter) {
-        this._nexts.push({ resolver, rejecter })
-      }
-
-      catch (rejecter) {
-        this._nexts.push({ rejecter })
-      }
+      executor(
+        create('resolver'),
+        create('rejecter')
+      )
     }
 
     var f = function f (cb) {
       return maybe(cb, new Promizy(function (resolve, reject) {
-        process.nextTick(() => {
+        process.nextTick(function () {
           resolve("foo")
         })
-        process.nextTick(() => {
+        process.nextTick(function () {
           resolve("bar") // fail, resolve already called
         })
-        process.nextTick(() => {
+        process.nextTick(function () {
           reject(new Error("baz")) // another fail, resolve already called
         })
       }))
