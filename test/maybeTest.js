@@ -118,20 +118,70 @@ describe("maybe", function () {
   })
 
   it("should not let the callback be called more than once", function (done) {
+
+    /**
+     * A __very__ broken Promise implementation
+     */
+    class Promizy {
+
+      constructor (executor) {
+
+        this._nexts = []
+
+        const create = (type) => {
+          return (value) => {
+            for (const next of this._nexts) {
+              const fn = next[type]
+              if (typeof fn === 'function') {
+                fn(value)
+              }
+            }
+          }
+        }
+
+        executor(
+          create('resolver'),
+          create('rejecter')
+        )
+      }
+
+      then (resolver, rejecter) {
+        this._nexts.push({ resolver, rejecter })
+      }
+
+      catch (rejecter) {
+        this._nexts.push({ rejecter })
+      }
+    }
+
     var f = function f (cb) {
-      return maybe(cb, new Promise(function (resolve, reject) {
-        process.nextTick(function () {
+      return maybe(cb, new Promizy(function (resolve, reject) {
+        process.nextTick(() => {
           resolve("foo")
+        })
+        process.nextTick(() => {
+          resolve("bar") // fail, resolve already called
+        })
+        process.nextTick(() => {
+          reject(new Error("baz")) // another fail, resolve already called
         })
       }))
     }
 
+    function finish (err) {
+      if (err) return done(err)
+      assert(called === 1, "called only once")
+      done()
+    }
+
+    var timer = 0
     var called = 0
+
     f(function (err, result) {
-      called++
-      assert(called <= 1, "called only once")
-      setTimeout(function () { done() }, 100)
-      return Promise.reject(new Error("bah"))
+      if (timer) clearTimeout(timer)
+      if (err) return finish(err)
+      called += 1
+      timer = setTimeout(finish, 100)
     })
   })
 })
