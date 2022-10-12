@@ -1,6 +1,6 @@
 "use strict"
 
-var next = (global.process && process.nextTick) || global.setImmediate || function (f) {
+var next = (global && global.process && process.nextTick) || (global && global.setImmediate) || function (f) {
   setTimeout(f, 0)
 }
 
