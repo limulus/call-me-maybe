@@ -6,8 +6,7 @@
   "dependencies": {},
   "devDependencies": {
     "mocha": "^2.3.2",
-    "promise": "^7.0.4",
-    "zuul": "^3.4.0"
+    "promise": "^7.0.4"
   },
   "scripts": {
     "test": "mocha"
