@@ -3,10 +3,10 @@
   "version": "1.0.1",
   "description": "Let your JS API users either give you a callback or receive a promise",
   "main": "index.js",
-  "dependencies": {},
   "devDependencies": {
     "mocha": "^2.3.2",
-    "promise": "^7.0.4"
+    "promise": "^7.0.4",
+    "semantic-release": "^19.0.5"
   },
   "scripts": {
     "test": "mocha"
