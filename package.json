@@ -4,7 +4,7 @@
   "description": "Let your JS API users either give you a callback or receive a promise",
   "main": "index.js",
   "devDependencies": {
-    "mocha": "^2.3.2",
+    "mocha": "^10.1.0",
     "promise": "^7.0.4",
     "semantic-release": "^19.0.5"
   },
