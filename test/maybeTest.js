@@ -117,21 +117,24 @@ describe("maybe", function () {
     }
   })
 
-  it("should not let the callback be called more than once", function (done) {
-    var f = function f (cb) {
-      return maybe(cb, new Promise(function (resolve, reject) {
-        process.nextTick(function () {
-          resolve("foo")
-        })
-      }))
-    }
-
-    var called = 0
-    f(function (err, result) {
-      called++
-      assert(called <= 1, "called only once")
-      setTimeout(function () { done() }, 100)
-      return Promise.reject(new Error("bah"))
+  describe("when callback returns rejected promise", function () {
+    it("should not let the callback be called more than once", function (done) {
+      var f = function f (cb) {
+        return maybe(cb, new Promise(function (resolve, reject) {
+          process.nextTick(function () {
+            resolve("foo")
+          })
+        }))
+      }
+  
+      var called = 0
+      f(function (err, result) {
+        called++
+        assert(called <= 1, "called only once")
+        setTimeout(function () { done() }, 100)
+        process.once('unhandledRejection', function () { /* ignore unhandled rejection */ })
+        return Promise.reject(new Error("bah"))
+      })
     })
   })
 })
