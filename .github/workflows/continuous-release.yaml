@@ -14,12 +14,30 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-          cache: 'npm'
+          cache: npm
       - run: npm ci
       - run: npm test
 
+  test-browsers:
+    runs-on: ubuntu-latest
+    name: test using BrowserStack
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run test-browsers
+        env:
+          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+
   publish:
-    needs: test-node
+    needs:
+      - test-node
+      - test-browsers
     runs-on: ubuntu-latest
     name: publish package if needed
     steps:
@@ -27,7 +45,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'npm'
+          cache: npm
       - run: npm ci
       - run: npx semantic-release
         env:
