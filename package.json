@@ -8,7 +8,7 @@
     "commitlint": "^17.1.2",
     "husky": "^7.0.0",
     "is-ci": "^3.0.1",
-    "mocha": "^2.3.2",
+    "mocha": "^10.1.0",
     "promise": "^7.0.4",
     "semantic-release": "^19.0.5"
   },
