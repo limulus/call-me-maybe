@@ -4,12 +4,17 @@
   "description": "Let your JS API users either give you a callback or receive a promise",
   "main": "index.js",
   "devDependencies": {
+    "@commitlint/config-conventional": "^17.1.0",
+    "commitlint": "^17.1.2",
+    "husky": "^7.0.0",
+    "is-ci": "^3.0.1",
     "mocha": "^2.3.2",
     "promise": "^7.0.4",
     "semantic-release": "^19.0.5"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "prepare": "is-ci || husky install"
   },
   "repository": {
     "type": "git",
