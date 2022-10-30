@@ -1,4 +1,4 @@
-# call-me-maybe
+# call-me-maybe [![Continuous Release](https://github.com/limulus/call-me-maybe/actions/workflows/continuous-release.yaml/badge.svg)](https://github.com/limulus/call-me-maybe/actions/workflows/continuous-release.yaml)
 
 Let your JS API users either give you a callback or receive a promise.
 
