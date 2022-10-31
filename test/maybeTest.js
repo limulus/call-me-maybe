@@ -1,6 +1,6 @@
 "use strict"
 
-var maybe = require("../")
+var maybe = require("../src/maybe.js")
 var assert = require("assert")
 var Promise = global.Promise || require("promise")
 
