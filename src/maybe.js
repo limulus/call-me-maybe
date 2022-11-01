@@ -1,8 +1,6 @@
 "use strict"
 
-var next = (global.process && process.nextTick) || global.setImmediate || function (f) {
-  setTimeout(f, 0)
-}
+var next = require('./next.js')
 
 module.exports = function maybe (cb, promise) {
   if (cb) {
